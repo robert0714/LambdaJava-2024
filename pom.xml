@@ -14,8 +14,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <testcontainers.version>1.20.2</testcontainers.version>
         <aws-java-sdk.version>1.12.776</aws-java-sdk.version>
-        <aws-java-sdk2.version>2.28.26</aws-java-sdk2.version>
-        <aws.sdk.version>2.28.26</aws.sdk.version>
+         
+        <!-- <aws.sdk.version>2.20.68</aws.sdk.version> -->
+        <aws.sdk.version>2.29.1</aws.sdk.version>
         <junit-jupiter.version>5.9.2</junit-jupiter.version>
     </properties>
 
@@ -26,48 +27,72 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
         </dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.17.2</version>
+		</dependency> 
+		<!-- Test Dependencies -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId> 
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId> 
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>localstack</artifactId> 
+            <scope>test</scope>
+        </dependency>
 
-        <!-- Test Dependencies -->
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>localstack</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- AWS SDK -->
-        <!-- <dependency>
+		<!-- AWS SDK -->
+		<!-- <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-lambda</artifactId>
             <version>${aws-java-sdk.version}</version>
         </dependency>        -->
-        <!-- AWS SDK2 -->
+		<!-- AWS SDK2 -->
 		<dependency>
 		    <groupId>software.amazon.awssdk</groupId>
-		    <artifactId>lambda</artifactId> 
-		    <version>${aws-java-sdk2.version}</version>
-		    <scope>test</scope>
+		    <artifactId>lambda</artifactId>  
+		</dependency>
+		<dependency>
+		    <groupId>com.amazonaws</groupId>
+		    <artifactId>aws-lambda-java-events</artifactId>
+		    <version>3.14.0</version> 
 		</dependency> 
-		 
+		<dependency>
+	        <groupId>software.amazon.awssdk</groupId>
+	        <artifactId>apigateway</artifactId> 
+	        <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>software.amazon.awssdk</groupId>
+	        <artifactId>apache-client</artifactId>   
+	    </dependency>
+	    <dependency>
+		    <groupId>software.amazon.awssdk</groupId>
+		    <artifactId>url-connection-client</artifactId>  
+		</dependency>
+	    <dependency>
+	       <groupId>software.amazon.awssdk</groupId>
+	       <artifactId>dynamodb-enhanced</artifactId>  
+	    </dependency>
+	    <dependency>
+	      <groupId>software.amazon.awssdk</groupId>
+	      <artifactId>dynamodb</artifactId>  
+	    </dependency>
         <dependency>
 		    <groupId>com.amazonaws</groupId>
 		    <artifactId>aws-lambda-java-core</artifactId>
 		    <version>1.2.3</version>
 		    <scope>provided</scope>
 		</dependency>
-		
+		 
 		<dependency>
 		    <groupId>org.json</groupId>
 		    <artifactId>json</artifactId>
@@ -75,7 +100,7 @@
 		    <scope>test</scope>
 		</dependency>
 
-        <!-- JUnit 5 -->
+		<!-- JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -91,26 +116,40 @@
         <dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-annotations</artifactId>
-		    <version>2.18.0</version>
-		    <scope>test</scope>
+		    <version>2.18.0</version> 
 		</dependency>
 		<!-- SLF4J API -->
 	    <dependency>
 	        <groupId>org.slf4j</groupId>
 	        <artifactId>slf4j-api</artifactId>
-	        <version>1.7.36</version>
-	        <scope>test</scope>
+	        <version>1.7.36</version> 
 	    </dependency>
-	
-	    <!-- SLF4J 實現（這裡使用 logback） -->
+
+		<!-- SLF4J 實現（這裡使用 logback） -->
 	    <dependency>
 	        <groupId>ch.qos.logback</groupId>
 	        <artifactId>logback-classic</artifactId>
-	        <version>1.5.11</version>
-            <scope>test</scope>
+	        <version>1.5.11</version> 
         </dependency>
     </dependencies>
-
+   <dependencyManagement>
+    <dependencies> 
+      <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>bom</artifactId>
+        <version>${aws.sdk.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-bom</artifactId>
+            <version>${testcontainers.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+  </dependencyManagement>
    <build>
         <plugins>
             <plugin>
@@ -118,7 +157,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.1</version>
             </plugin>
-            <!-- Maven Shade Plugin 配置 -->
+			<!-- Maven Shade Plugin 配置 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -127,11 +166,11 @@
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>aws</shadedClassifierName>
-                            <transformers>
+                            <!-- <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>software.aws.StringProcessor</mainClass>
                                 </transformer>
-                            </transformers> 
+                            </transformers> -->
                             <filters>
                                <filter>
                                     <artifact>*:*</artifact>
@@ -155,8 +194,8 @@
                     </execution>
                 </executions>
             </plugin>
-                
-            <!-- <plugin>
+
+			<!-- <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.7.1</version>
                 <executions>
@@ -175,8 +214,8 @@
                     <finalName>lambda</finalName>
                 </configuration>
             </plugin> -->
-            
-            <!-- <plugin>
+
+			<!-- <plugin>
                 <groupId>io.github.zlika</groupId>
                 <artifactId>reproducible-build-maven-plugin</artifactId>
                 <version>0.17</version>
